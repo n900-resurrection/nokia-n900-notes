@@ -7,6 +7,8 @@
     - [root](#root)
     - [SSH](#ssh)
   - [Repository](#repository)
+    - [Which repositories to keep](#which-repositories-to-keep)
+    - [The N900 Resurrection repository](#the-n900-resurrection-repository)
     - [Mirrors](#mirrors)
   - [Apps](#apps)
     - [Installation from `.install` files](#installation-from-install-files)
@@ -71,53 +73,72 @@ Or you can manually edit the sudo requirements in
 [Meamo 5 SSH](../doc/Nokia%20N900%20-%20SSH.md)
 
 ## Repository
-By default, the N900 only has the Ovi Store and firmware update catalogs in the list. However, a wider selection of applications is available on Maemo user servers. You have to add them manually:
+By default, the N900 only has the Ovi Store and firmware update catalogs in the list, and **all of them are dead today** (`downloads.maemo.nokia.com`, `repository.maemo.org`, Ovi). Every refresh of the Application Manager waits for their DNS errors and timeouts, so remove them and keep only repositories that are alive and that you trust.
+
+> [!warning]
+> The original servers [repository.maemo.org](http://repository.maemo.org/) are down. A snapshot of the whole repository from September 2017 lives on the mirror `maemo.plan9.de` (below); an older copy is on [web.archive.org](https://web.archive.org/web/20250201032157/http://repository.maemo.org/).
+
+### Which repositories to keep
+- **Extras (mirror plan9 2017)**: the community applications. This is the one to have.
+- **Extras-testing, Extras-devel**: only when you need a package from there. Their indexes are large (Extras-devel about 29 MB, Extras-testing about 9 MB) and make the refresh slow, so keep them switched off otherwise.
+- **[N900 Resurrection](https://n900-resurrection.github.io/n900-repository)**: modern software (curl 8, git, Python 3.11, mutt, gPodder...), still maintained. It needs a few packages first, see below.
+- Anything else only if you know who runs it: packages are installed as root.
+
+Addresses of the plan9 mirror (Distribution `fremantle`, Components `free non-free`); a second mirror, in case plan9 is down, follows below:
 
 ```txt
-Maemo Extras
-Web address: http://repository.maemo.org/extras/
-Distribution: fremantle
-Components: free non-free
+Extras (mirror plan9 2017)
+Web address: http://maemo.plan9.de/apt-mirror/mirror/repository.maemo.org/extras/
 
-Maemo Extras-testing
-Web address: http://repository.maemo.org/extras-testing/
-Distribution: fremantle
-Components: free non-free
+Extras-testing (mirror plan9 2017)
+Web address: http://maemo.plan9.de/apt-mirror/mirror/repository.maemo.org/extras-testing/
 
-Maemo Extras-devel
-Web address: http://repository.maemo.org/extras-devel/
-Distribution: fremantle
-Components: free non-free
-
-My-Maemo.com
-Web address: http://my-maemo.com/repository/
-Distribution: fremantle
-Components: user
+Extras-devel (mirror plan9 2017)
+Web address: http://maemo.plan9.de/apt-mirror/mirror/repository.maemo.org/extras-devel/
 ```
 
+**Second mirror, `n900.h4ck1ng.me`** (run by an active member of the r/N900 community; plain HTTP, snapshots of March 2026 of the same Extras, Extras-testing and Extras-devel, same distribution and components):
+
+```txt
+Extras (mirror h4ck1ng.me)
+Web address: http://n900.h4ck1ng.me/extras/
+
+Extras-testing (mirror h4ck1ng.me)
+Web address: http://n900.h4ck1ng.me/extras-testing/
+
+Extras-devel (mirror h4ck1ng.me)
+Web address: http://n900.h4ck1ng.me/extras-devel/
+```
+
+The same server also has `extras-h4ck1ng.me/` (a few extra packages of its owner: `wifite`, `wireless-tools` and a `libpcre3`, component `main`). Use only one mirror of a repository at a time, not both.
+
 > [!note]
-> Check [install](./repository/) files for repository configuration.
+> Open the [install](./repository/) files from the file manager and the Application Manager adds the catalogue for you. The file `extras.install` points to the dead `repository.maemo.org`, use `extras(mirror-plan9-2017).install` or `extras(mirror-h4ck1ng.me).install` instead.
 
-> [!warning]
-> The servers [repository.maemo.org](repository.maemo.org) are down at the moment of writing this tutorial. But a backup is available for download at:
-[web.archive.org](https://web.archive.org/web/20250201032157/http://repository.maemo.org/), or you can use the mirrors listed below.
+The Application Manager regenerates `/etc/apt/sources.list.d/hildon-application-manager.list` from its own catalogues, so editing that file does not last. Remove the dead entries in the Application Manager (Application catalogues) or mark them with `<disabled/>` in `/etc/hildon-application-manager/catalogues`.
 
+### The N900 Resurrection repository
+It is served over HTTPS, but the apt of Maemo 5 speaks TLS 1.0 only, which GitHub refuses. So install two packages by hand first (download the newest `.deb` files from the [pool](https://n900-resurrection.github.io/n900-repository/pool/main/), copy them to `/home/user/`, install as root together):
 
-Source:
-- [deset-a-dve-vylepseni-nokie-n900](https://www.idnes.cz/mobil/aplikace/deset-a-dve-vylepseni-nokie-n900-aplikace-ktere-musite-mit.A100209_192018_programy_lhc)
+```bash
+dpkg -l bash3 coreutils-gnu | grep '^ii'    # prerequisites: /bin/bash and the GNU tools; install them from Extras first if missing
+dpkg -i curl_<version>_armel.deb apt-transport-curl_<version>_armel.deb
+echo "deb https://n900-resurrection.github.io/n900-repository fremantle main" > /etc/apt/sources.list.d/n900.list
+apt-get update
+```
+
+`apt-transport-curl` (0.1-1maemo4 or newer) depends on `curl`, `bash3` and `coreutils-gnu`: the method is a bash script that uses the GNU `mktemp` and `sha256sum`, which the BusyBox of the phone lacks. The repository is not signed yet, so apt asks for `--force-yes`. Full guide: [Using the N900 repository on the phone](https://n900-resurrection.github.io/blog/2026/11/14/using-the-n900-repository/).
 
 ### Mirrors
-
-Mirrors of the Maemo repository can be found at:
+More about the mirrors of the Maemo repository:
 - [talk.maemo.org](https://talk.maemo.org/showthread.php?t=101524&page=3)
 - [maemo.plan9.de](https://maemo.plan9.de/)
-- [maemo.plan9.de/apt-mirror](https://maemo.plan9.de/apt-mirror/mirror/repository.maemo.org/)
-
-> [!note]
-> Or you can install mirrors from `*.install` files in the [`maemoOS_files/repository/`](./repository/) directory.
+- [n900.h4ck1ng.me](http://n900.h4ck1ng.me/) (the second mirror, see above)
 
 > [!warning]
-> Use the mirrors at your own risk, as they may not be up-to-date or reliable.
+> Use the mirrors at your own risk: they are third-party, served over HTTP and unsigned (`apt-get update` prints `NO_PUBKEY`; the packages still install).
+
+Source of the original list of repositories: [deset-a-dve-vylepseni-nokie-n900](https://www.idnes.cz/mobil/aplikace/deset-a-dve-vylepseni-nokie-n900-aplikace-ktere-musite-mit.A100209_192018_programy_lhc)
 
 ## Apps
 - [talk.maemo.org](https://talk.maemo.org/showthread.php?t=100636)

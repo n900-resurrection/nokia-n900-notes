@@ -1,0 +1,8 @@
+[catalogues]
+catalogues = extras-h4ck1ng-me
+
+[extras-h4ck1ng-me]
+name = Extras (mirror h4ck1ng.me 2026)
+uri = http://n900.h4ck1ng.me/extras/
+dist = fremantle
+components = free non-free
