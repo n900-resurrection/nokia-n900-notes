@@ -84,7 +84,7 @@ By default, the N900 only has the Ovi Store and firmware update catalogs in the 
 - **[N900 Resurrection](https://n900-resurrection.github.io/n900-repository)**: modern software (curl 8, git, Python 3.11, mutt, gPodder...), still maintained. It needs a few packages first, see below.
 - Anything else only if you know who runs it: packages are installed as root.
 
-Addresses of the plan9 mirror (Distribution `fremantle`, Components `free non-free`); a second mirror, in case plan9 is down, follows below:
+Addresses of the plan9 mirror (Distribution `fremantle`, Components `free non-free`); two more mirrors, in case plan9 is down, follow below:
 
 ```txt
 Extras (mirror plan9 2017)
@@ -110,7 +110,20 @@ Extras-devel (mirror h4ck1ng.me)
 Web address: http://n900.h4ck1ng.me/extras-devel/
 ```
 
-The same server also has `extras-h4ck1ng.me/` (a few extra packages of its owner: `wifite`, `wireless-tools` and a `libpcre3`, component `main`). Use only one mirror of a repository at a time, not both.
+**Third mirror, `maemo.viniciuspaes.com`** (the same Extras, Extras-testing and Extras-devel, plain HTTP; its Extras list was identical to the h4ck1ng.me one when I compared sizes; it also keeps the SDK repositories, `/firmware/` and `/flasher/`):
+
+```txt
+Extras (mirror viniciuspaes.com)
+Web address: http://maemo.viniciuspaes.com/extras/
+
+Extras-testing (mirror viniciuspaes.com)
+Web address: http://maemo.viniciuspaes.com/extras-testing/
+
+Extras-devel (mirror viniciuspaes.com)
+Web address: http://maemo.viniciuspaes.com/extras-devel/
+```
+
+The same h4ck1ng.me server also has `extras-h4ck1ng.me/` (a few extra packages of its owner: `wifite`, `wireless-tools` and a `libpcre3`, component `main`). Use only one mirror of a repository at a time, not both.
 
 > [!note]
 > Open the [install](./repository/) files from the file manager and the Application Manager adds the catalogue for you. The file `extras.install` points to the dead `repository.maemo.org`, use `extras(mirror-plan9-2017).install` or `extras(mirror-h4ck1ng.me).install` instead.
@@ -134,6 +147,7 @@ More about the mirrors of the Maemo repository:
 - [talk.maemo.org](https://talk.maemo.org/showthread.php?t=101524&page=3)
 - [maemo.plan9.de](https://maemo.plan9.de/)
 - [n900.h4ck1ng.me](http://n900.h4ck1ng.me/) (the second mirror, see above)
+- [maemo.viniciuspaes.com](https://maemo.viniciuspaes.com/) (the third mirror, firmware and flasher too)
 
 > [!warning]
 > Use the mirrors at your own risk: they are third-party, served over HTTP and unsigned (`apt-get update` prints `NO_PUBKEY`; the packages still install).

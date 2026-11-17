@@ -1,0 +1,8 @@
+[catalogues]
+catalogues = extras-testing-viniciuspaes
+
+[extras-testing-viniciuspaes]
+name = Extras-Testing (mirror viniciuspaes.com)
+uri = http://maemo.viniciuspaes.com/extras-testing/
+dist = fremantle
+components = free non-free
